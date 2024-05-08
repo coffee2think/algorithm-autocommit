@@ -4,25 +4,31 @@ class Solution {
     public String solution(int[] numbers) {
         StringBuilder sb = new StringBuilder();
 
-        // Arrays.sort()를 사용하기 위한 String 배열 초기화
-        String[] strNumbers = new String[numbers.length];
+        // Arrays.sort()를 사용하기 위한 박싱
+        Integer[] boxingNumbers = new Integer[numbers.length];
         for (int i = 0; i < numbers.length; i++) {
-            strNumbers[i] = String.valueOf(numbers[i]);
+            boxingNumbers[i] = numbers[i];
         }
 
-        // 문자열을 앞뒤로 붙여서 비교하여 정렬
-        Arrays.sort(strNumbers, (s1, s2) -> {
-            return (s2 + s1).compareTo(s1 + s2);
+        // 배열 정렬
+        Arrays.sort(boxingNumbers, (o1, o2) -> {
+            int digit1 = (o1 == 0) ? 0 : (int)Math.log10(o1);
+            int digit2 = (o2 == 0) ? 0 : (int)Math.log10(o2);
+
+            int case1 = o1 * (int)Math.pow(10, digit2 + 1) + o2; // o1 + o2
+            int case2 = o2 * (int)Math.pow(10, digit1 + 1) + o1; // o2 + o1
+
+            return case2 - case1;
         });
 
-        // 모두 "0"일 경우 "0"을 리턴
-        if (strNumbers[0].equals("0")) {
+        // 모든 수가 0이라면 0을 리턴
+        if (boxingNumbers[0] == 0) {
             return "0";
         }
 
-        // 문자열 합치기
-        for (String number : strNumbers) {
-            sb.append(number);
+        // 정렬된 배열을 문자열로 담음
+        for (int n : boxingNumbers) {
+            sb.append(n);
         }
 
         return sb.toString();
