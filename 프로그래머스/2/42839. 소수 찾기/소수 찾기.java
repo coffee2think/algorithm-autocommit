@@ -1,36 +1,67 @@
-// 다른 사람 풀이. 성능 비교용
+import java.util.Set;
 import java.util.HashSet;
+
 class Solution {
+    private static int[] pow10;
+    private static Set<Integer> primeSet;
+
     public int solution(String numbers) {
-        HashSet<Integer> set = new HashSet<>();
-        permutation("", numbers, set);
-        int count = 0;
-        while(set.iterator().hasNext()){
-            int a = set.iterator().next();
-            set.remove(a);
-            if(a==2) count++;
-            if(a%2!=0 && isPrime(a)){
-                count++;
-            }
-        }        
-        return count;
+        powInit(numbers.length());
+        primeSet = new HashSet<>();
+
+        int[] numArray = new int[numbers.length()];
+        boolean[] visited = new boolean[numArray.length];
+        for (int i = 0; i < numArray.length; i++) {
+            numArray[i] = numbers.charAt(i) - '0';
+        }
+
+        for (int i = 0; i < numArray.length; i++){
+            visited[i] = true;
+            dfs(0, numArray[i], numArray, visited);
+            visited[i] = false;
+        }
+
+        return primeSet.size();
     }
 
-    public boolean isPrime(int n){
-        if(n==0 || n==1) return false;
-        for(int i=3; i<=(int)Math.sqrt(n); i+=2){
-            if(n%i==0) return false;
+    public void dfs(int depth, int union, int[] numArray, boolean[] visited) {
+        // union이 소수라면 Set에 추가
+        if (isPrime(union)) {
+            primeSet.add(union);
+        }
+
+        // 마지막 깊이라면 dfs 종료
+        if (depth == numArray.length - 1) {
+            return;
+        }
+
+        // 다음 과정 진행
+        for (int i = 0; i < numArray.length; i++) {
+            if (!visited[i]) {
+                visited[i] = true;
+                dfs(depth + 1, union + numArray[i] * pow10[depth + 1], numArray, visited);
+                visited[i] = false;
+            }
+        }
+    }
+
+    // 소수 판별 메소드
+    public boolean isPrime(int n) {
+        if (n < 2) return false;
+        for (int i = 2; i <= Math.sqrt(n); i++) {
+            if (n % i == 0) {
+                return false;
+            }
         }
         return true;
     }
 
-        public void permutation(String prefix, String str, HashSet<Integer> set) {
-        int n = str.length();
-        //if (n == 0) System.out.println(prefix);
-        if(!prefix.equals("")) set.add(Integer.valueOf(prefix));
-        for (int i = 0; i < n; i++)
-          permutation(prefix + str.charAt(i), str.substring(0, i) + str.substring(i+1, n), set);
-
+    // 10의 거듭제곱 배열 초기화
+    public void powInit(int size) {
+        pow10 = new int[size + 1];
+        pow10[0] = 1;
+        for (int i = 1; i < pow10.length; i++) {
+            pow10[i] = pow10[i - 1] * 10;
+        }
     }
-
 }
