@@ -17,27 +17,12 @@ public class Main {
         // given
         int height = Integer.parseInt(st.nextToken());
         int width = Integer.parseInt(st.nextToken());
-        boolean rotateFlag = false; // 회전 flag
-
-        // 2차원 좌표를 1차원 인덱스로 변경하기 위해 큰 값을 가로로 바꿈
-        // (x, y) = x + y * width
-        // index = (index / width, index % width)
-        if (width < height) {
-            int tmp = width;
-            width = height;
-            height = tmp;
-            rotateFlag = true;
-        }
 
         map = new int[height][width];
-        for (int i = 0; i < (rotateFlag ? width : height); i++) {
+        for (int i = 0; i < height; i++) {
             String row = br.readLine();
-            for (int j = 0; j < (rotateFlag ? height : width); j++) {
-                if (rotateFlag) {
-                    map[j][i] = row.charAt(j) - 'A';
-                } else {
-                    map[i][j] = row.charAt(j) - 'A';
-                }
+            for (int j = 0; j < width; j++) {
+                map[i][j] = row.charAt(j) - 'A';
             }
         }
 
