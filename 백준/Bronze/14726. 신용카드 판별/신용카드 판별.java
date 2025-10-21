@@ -13,14 +13,13 @@ public class Main {
         for (int t = 0; t < T; t++) {
             String cardNumber = br.readLine();
             int sum = 0;
-            boolean isEven = false;
-            for (int i = cardNumber.length() - 1; i >= 0; i--) {
-                int value = (cardNumber.charAt(i) - '0') * (isEven ? 2 : 1);
+            for (int digit = 1; digit <= cardNumber.length(); digit++) {
+                int index = cardNumber.length() - digit;
+                int value = (cardNumber.charAt(index) - '0') * (digit % 2 == 0 ? 2 : 1);
                 if (value >= 10) {
                     value = value / 10 + value % 10;
                 }
                 sum += value;
-                isEven = !isEven;
             }
 
             sb.append(sum % 10 == 0 ? "T" : "F").append("\n");
