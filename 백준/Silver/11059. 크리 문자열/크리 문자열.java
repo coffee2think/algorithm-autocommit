@@ -15,13 +15,12 @@ public class Main {
             prefixSum[i + 1] = prefixSum[i] + (str.charAt(i) - '0');
         }
 
-        int maxEvenRange = strLen >> 1 << 1; // == strLen / 2 * 2. 최대 짝수 길이
         int maxRange = 0;
-        for (int range = maxEvenRange; range > 0; range -= 2) {
+        for (int range = 2; range <= strLen; range += 2) {
             int half = range / 2;
-            for (int left = 0; left <= strLen - range; left++) {
-                int prevSum = prefixSum[left + half] - prefixSum[left];
-                int nextSum = prefixSum[left + range] - prefixSum[left + half];
+            for (int right = range; right <= strLen; right++) {
+                int prevSum = prefixSum[right - half] - prefixSum[right - range];
+                int nextSum = prefixSum[right] - prefixSum[right - half];
                 if (prevSum == nextSum) {
                     maxRange = Math.max(range, maxRange);
                 }
